@@ -4,12 +4,87 @@ const server = express();
 server.use(express.json());
 
 
+
+const projects = []
+
+//MIDDLEWARE GLOBAL
+
+
+
+
+// GET //
+// List all projects
+
+server.get('/projects', (req, res) => {
+  return res.json(projects);
+})
+
+// GET //
+// List 1 project per index //need to fix
+server.get('/projects/:id', (req, res) => {
+  const { id } = req.params;
+  return res.json(projects[id]);
+})
+
+// POST //
+// Create new project //
+server.post('/projects', (req, res) => {
+  const { id, title } = req.body;
+  const project = {
+    id,
+    title,
+    tasks: []
+  }
+  projects.push(project)
+  return res.json(projects)
+})
+
+// PUT //
+// modify project //
+server.put('/projects/:id', (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+
+  const project = projects.find(p => p.id == id);
+
+  project.title = title;
+  return res.json(project);
+})
+
+// DELETE //
+// Delete project //
+server.delete('/projects/:id', (req, res) => {
+  const { id } = req.params;
+  projects.splice(id, 1);
+
+  return res.json(projects);
+})
+// POST 2 //
+// Add task insite project//
+server.post('/projects/:id/tasks', (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body;
+
+  const project = projects.find(p => p.id == id);
+
+  project.tasks.push(title);
+
+  return res.json(project);
+});
+
+
+
+
+
+server.listen(3100)
+
+
 // Query params = ?teste=1
 // Route params = /users/1
 // Request body = { "name": "Arthur", "email": "kaakk@kakak.kaak.ka" }
 
 
-const users = ['Diegão', 'Cláudio', 'Victor'];
+/*const users = ['Diegão', 'Cláudio', 'Victor'];
 
 
 //////// esse middleware faz um log depois de cada aquisição
@@ -20,7 +95,8 @@ server.use((req, res, next) => {
   return next();
 
   console.timeEnd('Request');
-});
+})
+
 
 //// middleware local ////
 function checkUserExists(req, res, next) {
@@ -76,4 +152,25 @@ server.delete('/users/:index', checkUserInArray, (req, res) => {
   return res.send();
 });
 
-server.listen(3000);
+server.listen(3000);*/
+
+
+
+
+
+// Query params = ?teste=1
+// Route params = /users/1
+// Request body = { "name": "Arthur", "email": "kaakk@kakak.kaak.ka" }
+
+/*server.get('/testou', (req, res) => {
+  const email = req.query.email;
+
+  return res.json(`o Email do cidadão é: ${email}`)
+})
+server.listen(3001)
+
+server.get('/telefone/:telefone', (req, res) => {
+  const telefone = req.params.telefone;
+
+  return res.json(`O telefone do jovem é ${telefone}`)
+})*/
